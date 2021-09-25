@@ -14,9 +14,13 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -30,116 +34,15 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
     /**
      * Creates new form RockPaperScissorGame
      */
-    int t, compuuterHandCounter;
-    Timer timer, computerHandTimer;
-    Dimension playerImgDimension;
-    Dimension computerImgDimension;
-    boolean isComputerHandUp = false;
+    
     
     public RockPaperScissorGame() {
         initComponents();
-        
         getContentPane().setBackground(Color.BLACK);
-        
         playerScore = 0;
         computerScore = 0;
-        
-        ImageIcon i;
-        Image im;
-        
-        i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        computerImgLbl.setIcon(i);
-        
-        i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(playerImgLbl.getWidth(), playerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        
-        i = new ImageIcon(im);
-        playerImgLbl.setIcon(i);
-        
     }
     
-    /*public void paintCommponent(Graphics g){
-        
-        AffineTransform at = new AffineTransform();
-        at.rotate(Math.toRadians(90));
-     
-        Graphics2D g2d = (Graphics2D) g;
-        ImageIcon i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        Image im = i.getImage();
-        g2d.drawImage(im, at, null);
-    }*/
-
-    String getcomputerChoice() {
-
-        int result = (int) Math.floor(Math.random() * 3);
-
-        String choice = "";
-
-        if (result == 1) {
-
-            choice = "r";
-        } else if (result == 2) {
-
-            choice = "p";
-        } else {
-
-            choice = "s";
-        }
-
-        return choice;
-    }
-    
-    boolean isDraw() {
-
-        if (playerChoice.equalsIgnoreCase(computerChoice)) {
-
-            return true;
-        }
-
-        return false;
-    }
-
-    Boolean isGameWon() {
-
-        if (playerChoice.equalsIgnoreCase("p")) {
-
-            if (computerChoice.equalsIgnoreCase("r")) {
-
-                return true;
-            }
-            return false;
-        } else if (playerChoice.equalsIgnoreCase("r")) {
-
-            if (computerChoice.equalsIgnoreCase("s")) {
-
-                return true;
-            }
-            return false;
-        } //else if(playerChoice.equalsIgnoreCase("s")){
-        else {
-
-            if (computerChoice.equalsIgnoreCase("p")) {
-
-                return true;
-            }
-            return false;
-        }
-// R < P < S < P
-
-//Increasing order
-// P > R > S > P
-// P < R < S <  
-        //return false;
-    }
-    void updateScores(){
-        
-        playerScoreLbl.setText("Player : %d".formatted(playerScore));
-        computerScoreLbl.setText("Computer : %d".formatted(computerScore));
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -245,7 +148,7 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
 
         playerPanel.setBackground(new java.awt.Color(0, 0, 255));
 
-        playerImgLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/RRock.png"))); // NOI18N
+        playerImgLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/RRockInverted.png"))); // NOI18N
 
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
         playerPanel.setLayout(playerPanelLayout);
@@ -360,53 +263,40 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
     }// </editor-fold>//GEN-END:initComponents
 
     private void resetGameBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetGameBtnActionPerformed
-        // TODO add your handling code here:
+        // Reseting the Score and hand images to default
+        
+        // Reset Scores
         playerScore = 0;
         computerScore = 0;
-        selectionLbl.setText("Make Your Selection");
         updateScores();
         
-        ImageIcon i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        Image im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        computerImgLbl.setIcon(i);
-        
-        i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(playerImgLbl.getWidth(), playerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        playerImgLbl.setIcon(i);
-        
-        
+        // Reset Selection
+        selectionLbl.setText("Make Your Selection");
+
+        // Reset Images
+        resetImages();
     }//GEN-LAST:event_resetGameBtnActionPerformed
 
     private void rockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rockBtnActionPerformed
-        // TODO add your handlin
-        
-        ImageIcon i;
-        Image im;
-        i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        playerImgLbl.setIcon(i);
-        
-        i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        computerImgLbl.setIcon(i);
+
+        // Reset Images
+        resetImages();
         
         playerImgDimension = playerImgLbl.getSize();
         computerImgDimension = computerImgLbl.getSize();
-        t = 10;
+        
+        // Set counter for Timer
+        timerCounter = 10;
+        
+        // Create Timer 
         timer = new Timer(200,this);
+        
+        // Start the Timer
         timer.start();
         
         playerChoice = "r";
         computerChoice = getcomputerChoice();
-        Point p = selectionLbl.getLocation();
+        
         Dimension d = selectionLbl.getSize();
         
         Timer tm = new Timer(2000, new ActionListener() {
@@ -414,28 +304,19 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
             public void actionPerformed(ActionEvent ae) {
 
                 ImageIcon i;
-                Image im;
+                
                 i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-                im = i.getImage();
-                im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                i = new ImageIcon(im);
                 playerImgLbl.setIcon(i);
 
                 if (isDraw()) {
 
                     i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
                     selectionLbl.setText("Draw");
 
                 } else if (isGameWon() == true) {
 
                     i = new ImageIcon(getClass().getResource("/images/SScissor.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
 
                     playerScore++;
@@ -444,9 +325,6 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
 
                 } else {
                     i = new ImageIcon(getClass().getResource("/images/PPaper.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
 
                     computerScore++;
@@ -459,71 +337,47 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
         });
         tm.start();
         tm.setRepeats(false);
-        //tm.stop();
 
     }//GEN-LAST:event_rockBtnActionPerformed
 
     private void paperBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paperBtnActionPerformed
-        // TODO add your handling code here:
-        ImageIcon i;
-        Image im;
-        i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        playerImgLbl.setIcon(i);
-        
-        i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        im = i.getImage();
-        im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        i = new ImageIcon(im);
-        computerImgLbl.setIcon(i);
+
+        // Reset Images
+        resetImages();
         
         playerImgDimension = playerImgLbl.getSize();
         computerImgDimension = computerImgLbl.getSize();
-        t = 10;
+        
+        // Set counter for Timer
+        timerCounter = 10;
+        
+        // Create Timer 
         timer = new Timer(200,this);
+        
+        // Start the Timer
         timer.start();
         
         playerChoice = "p";
         computerChoice = getcomputerChoice();
-        Point p = selectionLbl.getLocation();
         Dimension d = selectionLbl.getSize();
         
         Timer tm = new Timer(2000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ImageIcon i;
-                Image im;
+                
                 i = new ImageIcon(getClass().getResource("/images/PPaperInverted.png"));
-                im = i.getImage();
-                im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                i = new ImageIcon(im);
-
                 playerImgLbl.setIcon(i);
-
-                /*try {
-
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(RockPaperScissorGame.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-
+                
                 if (isDraw()) {
 
                     i = new ImageIcon(getClass().getResource("/images/PPaper.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
                     selectionLbl.setText("Draw");
 
                 } else if (isGameWon() == true) {
 
                     i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
 
                     playerScore++;
@@ -532,9 +386,6 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
 
                 } else {
                     i = new ImageIcon(getClass().getResource("/images/SScissor.png"));
-                    im = i.getImage();
-                    im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                    i = new ImageIcon(im);
                     computerImgLbl.setIcon(i);
 
                     computerScore++;
@@ -548,71 +399,44 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
         
        tm.start();
        tm.setRepeats(false);
-       //tm.stop();
         
     }//GEN-LAST:event_paperBtnActionPerformed
 
     private void ScissorBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ScissorBtnActionPerformed
-        // TODO add your handling code here:
-        
-        ImageIcon ii;
-        Image imm;
-        ii = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
-        imm = ii.getImage();
-        imm = imm.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        ii = new ImageIcon(imm);
-        playerImgLbl.setIcon(ii);
-        
-        ii = new ImageIcon(getClass().getResource("/images/RRock.png"));
-        imm = ii.getImage();
-        imm = imm.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-        ii = new ImageIcon(imm);
-        computerImgLbl.setIcon(ii);
-        
+
+        // Reset Images
+        resetImages();
         
         playerImgDimension = playerImgLbl.getSize();
         computerImgDimension = computerImgLbl.getSize();
-        t = 10;
+        timerCounter = 10;
         timer = new Timer(200,this);
         timer.start();
         
         playerChoice = "s";
+        
         computerChoice = getcomputerChoice();
-        Point p = selectionLbl.getLocation();
+        
         Dimension d = selectionLbl.getSize();
         
         Timer tm = new Timer(2000, (e) -> {
 
             ImageIcon i;
-            Image im;
-            i = new ImageIcon(getClass().getResource("/images/SScissorInverted.png"));
-            im = i.getImage();
-            im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-            i = new ImageIcon(im);
-
-            playerImgLbl.setIcon(i);
-
-            /*try {
             
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RockPaperScissorGame.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+            i = new ImageIcon(getClass().getResource("/images/SScissorInverted.png"));
+            playerImgLbl.setIcon(i);
+            
             if (isDraw()) {
 
                 i = new ImageIcon(getClass().getResource("/images/SScissor.png"));
-                im = i.getImage();
-                im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                i = new ImageIcon(im);
+                
                 computerImgLbl.setIcon(i);
                 selectionLbl.setText("Draw");
 
             } else if (isGameWon() == true) {
 
                 i = new ImageIcon(getClass().getResource("/images/PPaper.png"));
-                im = i.getImage();
-                im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                i = new ImageIcon(im);
+               
                 computerImgLbl.setIcon(i);
 
                 playerScore++;
@@ -621,9 +445,7 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
 
             } else {
                 i = new ImageIcon(getClass().getResource("/images/RRock.png"));
-                im = i.getImage();
-                im = im.getScaledInstance(computerImgLbl.getWidth(), computerImgLbl.getHeight(), Image.SCALE_SMOOTH);
-                i = new ImageIcon(im);
+               
                 computerImgLbl.setIcon(i);
 
                 computerScore++;
@@ -636,7 +458,6 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
         
         tm.start();
         tm.setRepeats(false);
-        //tm.stop();
     }//GEN-LAST:event_ScissorBtnActionPerformed
 
     /**
@@ -677,8 +498,92 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
     String computerChoice = "";
     Integer playerScore;
     Integer computerScore;
-    boolean isUp = false;
-    boolean isUpPlayer = false;
+    boolean areHandsUp = false;
+    int timerCounter;
+    Timer timer;
+    Dimension playerImgDimension;
+    Dimension computerImgDimension;
+    
+    String getcomputerChoice() {
+
+        int result = (int) Math.floor(Math.random() * 3);
+
+        String choice = "";
+
+        if (result == 1) {
+
+            choice = "r";
+        } else if (result == 2) {
+
+            choice = "p";
+        } else {
+
+            choice = "s";
+        }
+
+        return choice;
+    }
+    
+    boolean isDraw() {
+
+        if (playerChoice.equalsIgnoreCase(computerChoice)) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    Boolean isGameWon() {
+
+        if (playerChoice.equalsIgnoreCase("p")) {
+
+            if (computerChoice.equalsIgnoreCase("r")) {
+
+                return true;
+            }
+            return false;
+        } else if (playerChoice.equalsIgnoreCase("r")) {
+
+            if (computerChoice.equalsIgnoreCase("s")) {
+
+                return true;
+            }
+            return false;
+        } 
+        else {
+
+            if (computerChoice.equalsIgnoreCase("p")) {
+
+                return true;
+            }
+            return false;
+        }
+// R < P < S < P
+
+//Increasing order
+// P > R > S > P
+// P < R < S <  
+      
+    }
+    void updateScores(){
+        
+        playerScoreLbl.setText("Player : %d".formatted(playerScore));
+        computerScoreLbl.setText("Computer : %d".formatted(computerScore));
+    }
+    
+    void resetImages(){
+        
+        //Reset Computer Hand Image to Rock
+        ImageIcon i = new ImageIcon(getClass().getResource("/images/RRock.png"));
+        computerImgLbl.setIcon(i);
+        
+        //Reset Player Hand Image to Rock
+        i = new ImageIcon(getClass().getResource("/images/RRockInverted.png"));
+        playerImgLbl.setIcon(i);
+        
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ScissorBtn;
     private javax.swing.JLabel computerImgLbl;
@@ -697,21 +602,21 @@ public class RockPaperScissorGame extends javax.swing.JFrame implements ActionLi
     @Override
     public void actionPerformed(ActionEvent e) {
         //System.out.println("Action Per");
-        if(t > 0){
-            t--;
+        if(timerCounter > 0){
+            timerCounter--;
             
-            if(isUp){
+            if(areHandsUp){
                 
                 playerImgDimension.setSize(playerImgLbl.getWidth(), playerImgLbl.getHeight() - 20);
                 computerImgDimension.setSize(computerImgLbl.getWidth(), computerImgLbl.getHeight() - 20);
-                isUp = false;
+                areHandsUp = false;
             }
             else{
                 
                
                 playerImgDimension.setSize(playerImgLbl.getWidth(), playerImgLbl.getHeight() + 20);
                 computerImgDimension.setSize(computerImgLbl.getWidth(), computerImgLbl.getHeight() + 20);
-                isUp = true;
+                areHandsUp = true;
             }
             
         }
