@@ -4,6 +4,16 @@
 
 Rock Paper Scissors is a fun two player game, where Scissor beats Paper, Paper beats Rock and Rock beats Scissor.
 
+User will the option by clicking the button.
+
+Then will hands will move for ten seconds to show animated effect.
+
+Computer will randomly select the option.
+
+On the base of rules, score will be set accordingly.
+
+Result can be resetted using Reset Game button. 
+
 It is Java based GUI application with animation affect.
 
 It is built using Java Swing framework.
@@ -53,7 +63,7 @@ It is built using Java Swing framework.
 </p>
 
 <div align = "center">
-  <figcaption align = "center"> Fig-E: Result will be reset on clicking resetting button </figcaption>
+  <figcaption align = "center"> Fig-E: Result will be reset on clicking Reset Game button </figcaption>
  </div>
  </br>
 
