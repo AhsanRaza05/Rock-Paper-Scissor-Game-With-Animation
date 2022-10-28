@@ -67,3 +67,12 @@ It is built using Java Swing framework.
  </div>
  </br>
 
+## <div id = "VI"> Video </div>
+
+<div align = "center">
+
+https://user-images.githubusercontent.com/83647120/198733477-fdf25927-3937-4690-a8b4-55396a86fa0e.mp4
+
+<figcaption align = "center"> Fig-E: Result will be reset on clicking Reset Game button </figcaption>
+ </div>
+ </br>
